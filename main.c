@@ -13,11 +13,12 @@
 #include <stdlib.h>
 #include "vector.h"
 
-#define MEM_SIZE 10
+#define INITIAL_MEM_SIZE 2
 //Put clear, remove, list, and help here
 int main() 
 {
-    vector memory[MEM_SIZE];
+    vector *memory = malloc(INITIAL_MEM_SIZE * sizeof(vector));
+    int curr_mem = INITIAL_MEM_SIZE;
     char textstr_array[10][10];
     char *seq;
     
@@ -48,6 +49,7 @@ int main()
         strcpy(userinputcpy, userinput);
         if (strcmp(userinput, "quit\n") == 0)     //quit, with enter key
         {
+            free(memory);
             return 0;
         }
         token = strtok(userinput, " ");
@@ -63,20 +65,28 @@ int main()
         seq = sequence(textstr_array, arg);
         //Remove excess enter from console input
         seq[strlen(seq) - 1] = '\0';
+        printf("%s", textstr_array[0]);
+        //Validate vectors
+
+
+
 
 
         //Case 1: Vector
         if (strcmp(seq, "v") == 0)   
         {
-            printvector(*getVector(memory, textstr_array[0]));
+            printvector(*getVector(memory, textstr_array[0], curr_mem));
         }
 
         //Case 2: Vector = float float float
         else if (strcmp(seq, "v=fff") == 0)   
         {
-            //Check mem full
-            if (elements < 10)
+            //Check mem full, then realloc
+            if (elements >= curr_mem)
             {
+                curr_mem *= 2;
+                memory = (vector *) realloc(memory, curr_mem * sizeof(vector));
+            }
             //Check same name
             for (int i = 0; i < elements; i++) 
             {
@@ -92,194 +102,192 @@ int main()
             {
             memory[elements] = create(strtof(textstr_array[2], NULL), strtof(textstr_array[3], NULL), strtof(textstr_array[4], NULL), textstr_array[0]);
             elements++;
-            printvector(*getVector(memory, textstr_array[0]));
+            printvector(*getVector(memory, textstr_array[0], curr_mem));
             } 
-            }
-            else
-            {
-                printf("Memory Full.");
-            }
+            
         }
 
         //Case 3.1: Vector + Vector
         else if (strcmp(seq, "v+v") == 0)   
         {
-            temp = add(getVector(memory, textstr_array[0]), getVector(memory, textstr_array[2]), "ans"); 
+            temp = add(getVector(memory, textstr_array[0], curr_mem), getVector(memory, textstr_array[2], curr_mem), "ans"); 
             printvector(temp);
         }
 
         //Case 3.2: Vector - Vector
         else if (strcmp(seq, "v-v") == 0)   
         {
-            temp = sub(getVector(memory, textstr_array[0]), getVector(memory, textstr_array[2]), "ans "); 
+            temp = sub(getVector(memory, textstr_array[0], curr_mem), getVector(memory, textstr_array[2], curr_mem), "ans "); 
             printvector(temp);
         }
 
         //Case 3.3: Vector . Vector
         else if (strcmp(seq, "v.v") == 0)   
         {
-            printf("ans = %f", dotprod(getVector(memory, textstr_array[0]), getVector(memory, textstr_array[2]))); 
+            printf("ans = %f", dotprod(getVector(memory, textstr_array[0], curr_mem), getVector(memory, textstr_array[2], curr_mem))); 
         }
 
         //Case 3.4: Vector X Vector
         else if (strcmp(seq, "vXv") == 0)   
         {
-            temp = crosprod(getVector(memory, textstr_array[0]), getVector(memory, textstr_array[2]), "ans"); 
+            temp = crosprod(getVector(memory, textstr_array[0], curr_mem), getVector(memory, textstr_array[2], curr_mem), "ans"); 
             printvector(temp);
         }
 
         //Case 4.1: Vector = Vector + Vector
         else if (strcmp(seq, "v=v+v") == 0)   
         {
-            //Check mem full
-            if (elements < 10)
+            //Check mem full, then realloc
+            if (elements >= curr_mem)
             {
+                curr_mem *= 2;
+                memory = (vector *) realloc(memory, curr_mem * sizeof(vector));
+            }
             //Check same name
             for (int i = 0; i < elements; i++) 
             {
                 if (strcmp(textstr_array[0], memory[i].name) == 0) 
                 {
-                    memory[i] = add(getVector(memory, textstr_array[2]), getVector(memory, textstr_array[4]), textstr_array[0]);
+                    memory[i] = add(getVector(memory, textstr_array[2], curr_mem), getVector(memory, textstr_array[4], curr_mem), textstr_array[0]);
                     printvector(memory[i]);
                     rewritten = true;
                 }
             }
             if(!rewritten) {
-                memory[elements] = add(getVector(memory, textstr_array[2]), getVector(memory, textstr_array[4]), textstr_array[0]);
+                memory[elements] = add(getVector(memory, textstr_array[2], curr_mem), getVector(memory, textstr_array[4], curr_mem), textstr_array[0]);
                 elements++;
-                printvector(*getVector(memory, textstr_array[0]));
-            }
-            }
-            else 
-            {
-                printf("Memory Full.");
+                printvector(*getVector(memory, textstr_array[0], curr_mem));
             }
         }
 
         //Case 4.2: Vector = Vector - Vector
         else if (strcmp(seq, "v=v-v") == 0)   
         {
-            //Check mem full
-            if (elements < 10)
+            //Check mem full, then realloc
+            if (elements >= curr_mem)
             {
+                curr_mem *= 2;
+                memory = (vector *) realloc(memory, curr_mem * sizeof(vector));
+            }
             //Check same name
             for (int i = 0; i < elements; i++) 
             {
                 if (strcmp(textstr_array[0], memory[i].name) == 0) 
                 {
-                    memory[i] = sub(getVector(memory, textstr_array[2]), getVector(memory, textstr_array[4]), textstr_array[0]);
+                    memory[i] = sub(getVector(memory, textstr_array[2], curr_mem), getVector(memory, textstr_array[4], curr_mem), textstr_array[0]);
                     printvector(memory[i]);
                     rewritten = true;
                 }
             }
             if (!rewritten)
             {
-                memory[elements] = sub(getVector(memory, textstr_array[2]), getVector(memory, textstr_array[4]), textstr_array[0]);
+                memory[elements] = sub(getVector(memory, textstr_array[2], curr_mem), getVector(memory, textstr_array[4], curr_mem), textstr_array[0]);
                 elements++;
-                printvector(*getVector(memory, textstr_array[0]));
-            }
-            }
-            else 
-            {
-                printf("Memory Full.");
+                printvector(*getVector(memory, textstr_array[0], curr_mem));
             }
         }
 
         //Case 4.4: Vector = Vector X Vector
         else if (strcmp(seq, "v=vXv") == 0)   
         {
-            //Check mem full
-            if (elements < 10)
+            //Check mem full, then realloc
+            if (elements >= curr_mem)
             {
+                curr_mem *= 2;
+                memory = (vector *) realloc(memory, curr_mem * sizeof(vector));
+            }
             //Check same name
             for (int i = 0; i < elements; i++) 
             {
                 if (strcmp(textstr_array[0], memory[i].name) == 0) 
                 {
-                    memory[i] = crosprod(getVector(memory, textstr_array[2]), getVector(memory, textstr_array[4]), textstr_array[0]);
+                    memory[i] = crosprod(getVector(memory, textstr_array[2], curr_mem), getVector(memory, textstr_array[4], curr_mem), textstr_array[0]);
                     printvector(memory[i]);
                     rewritten = true;
                 }
             }
             if (!rewritten) {
-            memory[elements] = crosprod(getVector(memory, textstr_array[2]), getVector(memory, textstr_array[4]), textstr_array[0]);
+            memory[elements] = crosprod(getVector(memory, textstr_array[2], curr_mem), getVector(memory, textstr_array[4], curr_mem), textstr_array[0]);
             elements++;
-            printvector(*getVector(memory, textstr_array[0]));
-            }
-            }
-            else 
-            {
-                printf("Memory Full.");
+            printvector(*getVector(memory, textstr_array[0], curr_mem));
             }
         }
 
         //Case 5.1: Vector = Vector * float (Communitive)
         else if (strcmp(seq, "v=v*f") == 0)   
         {
-            //Check mem full
-            if (elements < 10)
+            //Check mem full, then realloc
+            if (elements >= curr_mem)
             {
+                curr_mem *= 2;
+                memory = (vector *) realloc(memory, curr_mem * sizeof(vector));
+            }
             //Check same name
             for (int i = 0; i < elements; i++) 
             {
                 if (strcmp(textstr_array[0], memory[i].name) == 0) 
                 {
-                    memory[i] =  mult(strtof(textstr_array[4], NULL), getVector(memory, textstr_array[2]), textstr_array[0]); 
+                    memory[i] =  mult(strtof(textstr_array[4], NULL), getVector(memory, textstr_array[2], curr_mem), textstr_array[0]); 
                     printvector(memory[i]);
                     rewritten = true;
                 }
             }
             if (!rewritten) {
-            memory[elements] = mult(strtof(textstr_array[4], NULL), getVector(memory, textstr_array[2]), textstr_array[0]); 
+            memory[elements] = mult(strtof(textstr_array[4], NULL), getVector(memory, textstr_array[2], curr_mem), textstr_array[0]); 
             elements++;
-            printvector(*getVector(memory, textstr_array[0]));
-            }
-            }
-            else
-            {
-                printf("Memory Full.");
+            printvector(*getVector(memory, textstr_array[0], curr_mem));
             }
         }
         //Case 5.2
         else if (strcmp(seq, "v=f*v") == 0)   
         {
-            //Check mem full
-            if (elements < 10)
+            //Check mem full, then realloc
+            if (elements >= curr_mem)
             {
+                curr_mem *= 2;
+                memory = (vector *) realloc(memory, curr_mem * sizeof(vector));
+            }
             //Check same name
             for (int i = 0; i < elements; i++) 
             {
                 if (strcmp(textstr_array[0], memory[i].name) == 0) 
                 {
-                    memory[i] =  mult(strtof(textstr_array[2], NULL), getVector(memory, textstr_array[4]), textstr_array[0]); 
+                    memory[i] =  mult(strtof(textstr_array[2], NULL), getVector(memory, textstr_array[4], curr_mem), textstr_array[0]); 
                     printvector(memory[i]);
                     rewritten = true;
                 }
             }
             if (!rewritten){
-            memory[elements] = mult(strtof(textstr_array[2], NULL), getVector(memory, textstr_array[4]), textstr_array[0]); 
+            memory[elements] = mult(strtof(textstr_array[2], NULL), getVector(memory, textstr_array[4], curr_mem), textstr_array[0]); 
             elements++;
-            printvector(*getVector(memory, textstr_array[0]));
-            }
-        }
-            else
-            {
-                printf("Memory Full");
+            printvector(*getVector(memory, textstr_array[0], curr_mem));
             }
         }
 
         //Case 6.1: Vector * float (Comunitive)
         else if (strcmp(seq, "v*f") == 0)   
         {
-            temp = mult(strtof(textstr_array[2], NULL), getVector(memory, textstr_array[0]), "ans"); 
+            temp = mult(strtof(textstr_array[2], NULL), getVector(memory, textstr_array[0], curr_mem), "ans"); 
             printvector(temp);
         }
         //Case 6.2
         else if (strcmp(seq, "f*v") == 0)   
         {
-            temp = mult(strtof(textstr_array[0], NULL), getVector(memory, textstr_array[2]), "ans"); 
+            temp = mult(strtof(textstr_array[0], NULL), getVector(memory, textstr_array[2], curr_mem), "ans"); 
             printvector(temp);
         }
+        //Case: Load
+        else if(INITIAL_MEM_SIZE == 0)
+        {
+
+        }
+        
+        //Case: Save
+        else if(strcmp(textstr_array[0], "load") == 0) 
+        {
+            printf("Load Successful");
+        }
+
         //Case: help
         else if (strcmp(userinputcpy, "help\n") == 0)     //Help case
         {
@@ -303,13 +311,16 @@ int main()
         //Case: clear
         else if (strcmp(userinputcpy, "clear\n") == 0)     //list case
         {
-            memset(memory, 0, sizeof(memory));
+            free(memory);
+            memory = malloc(INITIAL_MEM_SIZE * sizeof(vector));
+            curr_mem = INITIAL_MEM_SIZE;
             elements = 0;
         }
         //Case 0: Error/Invalid Input
         else 
         {
-            printf("Invailid input. Try typing help. Also make sure to have spaces in between each character \nand only using supported functions.\n");
+            printf("Invailid input. Try typing help. Make sure all vector names are valid and initialized.\n");
+            printf("You must also have spaces in between each character and only using supported functions.\n");    
         }        
         free(seq);
     }

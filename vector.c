@@ -65,16 +65,15 @@ vector crosprod(vector *first, vector *second, char vector_name[])
     return create(new_x,new_y,new_z, vector_name);
 }
 
-vector *getVector(vector mem[10], char name[])
+vector *getVector(vector *mem, char name[], int size)
 {
-    for(int i = 0; i < 10; i++)
+    for(int i = 0; i < size; i++)
     {
         if(strcmp(mem[i].name, name) == 0) 
         {
             return &mem[i];
         }
     }
-    return NULL;        //If not found, return NULL
 }
 
 void printvector(vector v)

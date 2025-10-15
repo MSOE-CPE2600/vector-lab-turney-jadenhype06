@@ -28,7 +28,7 @@ float dotprod(vector *a, vector *b);
 
 vector crosprod(vector *a, vector *b, char name[]);
 
-vector *getVector(vector mem[10], char name[]);
+vector *getVector(vector *mem, char name[], int size);
 
 void printvector(vector v);
 
