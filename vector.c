@@ -4,7 +4,7 @@
 * Description: Defines the operations for vectors. It includes addition, subtraction, scalar mult.,
 * dot product, cross product.
 * Date: 10/10/25
-* Compile Info: gcc -o main main.c vector.c 
+* Compile Info: make 
 */
 #include <math.h>
 #include <stddef.h>
