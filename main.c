@@ -22,6 +22,7 @@ int main()
     char textstr_array[10][10];
     char *seq;
     
+    FILE *file_ptr;
     char *token;
     int elements = 0;
     int arg;
@@ -61,11 +62,15 @@ int main()
             arg++;
             
         }
+        printf("Number of args: %d\n", arg);
         //Find the sequence
         seq = sequence(textstr_array, arg);
         //Remove excess enter from console input
         seq[strlen(seq) - 1] = '\0';
+
+        //Test Prints
         printf("%s", textstr_array[0]);
+        printf("%s\n",seq);
         //Validate vectors
 
 
@@ -283,9 +288,25 @@ int main()
         }
         
         //Case: Save
-        else if(strcmp(textstr_array[0], "load") == 0) 
+        else if(strcmp(textstr_array[0], "save") == 0 && arg == 3) 
         {
-            printf("Load Successful");
+
+            //textstr_array[1] contains the directory/filename
+            char directory[100];
+            strcpy(directory, textstr_array[1]);
+            strcat(directory,".csv");
+            printf("Directory: %s", directory);
+
+
+            file_ptr = fopen(directory, "w");
+            fprintf(file_ptr,"Name,X,Y,Z\n");
+            for (int i = 0; i < elements; i++)
+            {
+                fprintf(file_ptr,"%s, %f, %f, %f\n", memory[i].name, memory[i].x,
+                memory[i].y, memory[i].z);
+            }
+            fclose(file_ptr);
+            
         }
 
         //Case: help
