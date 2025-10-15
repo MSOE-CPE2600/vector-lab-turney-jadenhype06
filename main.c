@@ -29,6 +29,7 @@ int main()
     int error;
     bool rewritten;
     
+    //Used for returning ans and loading a csv file.
     vector temp;
     printf("Welcome to the Vector Calculator!\n");
     printf("Valid inputs have spaces after each word/character (including the last char)\n");
@@ -282,9 +283,15 @@ int main()
             printvector(temp);
         }
         //Case: Load
-        else if(INITIAL_MEM_SIZE == 0)
+        else if(strcmp(textstr_array[0], "load") == 0 && arg == 3)
         {
+            //"Call" the clear case
+            free(memory);
+            memory = malloc(INITIAL_MEM_SIZE * sizeof(vector));
+            curr_mem = INITIAL_MEM_SIZE;
+            elements = 0;
 
+            //Store data in temp by reading .csv
         }
         
         //Case: Save
@@ -319,6 +326,9 @@ int main()
             printf("- Scalar Multiplication: Vector * Num (communitive with assignment functionality)\n");
             printf("- Dot Product: Vector . Vector\n");
             printf("- Cross Product: Vector X Vector (with assignment functionality)\n");
+            printf("- Save Vector Array: save [directory]");
+            printf("- Load Vector Array: load [directory]");
+            printf("Note: When using load, put .csv at the end of the directory. Only .csv files are supported.");
         }
         //Case: list
         else if (strcmp(userinputcpy, "list\n") == 0)     //list case
