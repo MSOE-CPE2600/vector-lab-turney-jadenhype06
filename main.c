@@ -3,7 +3,7 @@
 * Description: Launches the program to simulate a vector calculator. Many operations are supported as well as
 * vector-specfic operations.
 * Date: 10/10/25
-* Compile Info: gcc -o main main.c vector.c 
+* Compile Info: make
 */
 
 #include <stdbool.h>
