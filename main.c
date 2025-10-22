@@ -63,16 +63,45 @@ int main()
             arg++;
             
         }
-        printf("Number of args: %d\n", arg);
+        
         //Find the sequence
         seq = sequence(textstr_array, arg);
         //Remove excess enter from console input
         seq[strlen(seq) - 1] = '\0';
 
         //Test Prints
-        printf("%s", textstr_array[0]);
-        printf("%s\n",seq);
+        // printf("Number of args: %d\n", arg);
+        // printf("%s", textstr_array[0]);
+        // printf("%s\n",seq);
+
         //Validate vectors
+        bool vector_found = false;
+        bool no_search = false;
+        if (seq[0] == 'v' && seq[1] == '=')
+        {
+            vector_found = true;
+            no_search = true;
+        }
+        for (int i = 0; i < strlen(seq); i++)
+        {
+            if (no_search)
+            {
+                break;
+            }
+            if (seq[i] == 'v')
+            {
+                //Search Memory
+                for(int j = 0; j < elements; j++)
+                {
+                    if(strcmp(textstr_array[i],memory[j].name) == 0)
+                    vector_found = true;
+                }
+            }
+        }
+        if (!vector_found)
+        {
+            strcpy(seq,"ERROR");
+        }
 
 
 
@@ -291,7 +320,63 @@ int main()
             curr_mem = INITIAL_MEM_SIZE;
             elements = 0;
 
+            //Check mem full, then realloc
+            if (elements >= curr_mem)
+            {
+                curr_mem *= 2;
+                memory = (vector *) realloc(memory, curr_mem * sizeof(vector));
+            }
+
             //Store data in temp by reading .csv
+            char directory[100];
+            strcpy(directory, textstr_array[1]);
+            file_ptr = fopen(directory, "r");
+            char line[100];
+            char *token_read;
+            float new_x;
+            float new_y;
+            float new_z;
+            char new_name[10];
+
+            if (!file_ptr)
+            {
+                printf("Error reading file. Check if the file exists.\n");
+            }
+            else 
+            {
+                //Ignore Title
+                fgets(line,99,file_ptr);
+                printf("Line: %s", line);
+                while(fgets(line,99,file_ptr))
+                {
+                    token_read = strtok(line,",");
+                    strcpy(new_name,token_read);
+                    printf("%s\n", new_name);
+
+                    token_read = strtok(NULL, ",");
+                    new_x = atof(token_read);
+                    printf("%f\n", new_x);
+
+                    token_read = strtok(NULL, ",");
+                    new_y = atof(token_read);
+                    printf("%f\n", new_y);
+
+                    token_read = strtok(NULL, ",");
+                    new_z = atof(token_read);
+                    printf("%f\n", new_z);
+
+                    //Mem Realloc
+                    if (elements >= curr_mem)
+                    {
+                        curr_mem *= 2;
+                        memory = (vector *) realloc(memory, curr_mem * sizeof(vector));
+                    }
+                    memory[elements] = create(new_x, new_y, new_z, new_name);
+                    elements++;
+                }
+            }
+
+
         }
         
         //Case: Save
@@ -302,7 +387,7 @@ int main()
             char directory[100];
             strcpy(directory, textstr_array[1]);
             strcat(directory,".csv");
-            printf("Directory: %s", directory);
+            // printf("Directory: %s", directory);
 
 
             file_ptr = fopen(directory, "w");
