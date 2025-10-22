@@ -380,7 +380,6 @@ int main()
             //textstr_array[1] contains the directory/filename
             char directory[100];
             strcpy(directory, textstr_array[1]);
-            strcat(directory,".csv");
             // printf("Directory: %s", directory);
 
 
@@ -391,6 +390,7 @@ int main()
                 fprintf(file_ptr,"%s, %f, %f, %f\n", memory[i].name, memory[i].x,
                 memory[i].y, memory[i].z);
             }
+            printf("Save Successful\n");
             fclose(file_ptr);
             
         }
@@ -407,7 +407,8 @@ int main()
             printf("- Cross Product: Vector X Vector (with assignment functionality)\n");
             printf("- Save Vector Array: save [directory].csv");
             printf("- Load Vector Array: load [directory].csv");
-            printf("Note: When using load/save, put .csv at the end of the directory. Only .csv files are supported.");
+            printf("Note: When using load/save, put .csv at the end of the directory. Only .csv files are supported.\n");
+            printf("See README.md for more details.\n")
         }
         //Case: list
         else if (strcmp(userinputcpy, "list\n") == 0)     //list case
