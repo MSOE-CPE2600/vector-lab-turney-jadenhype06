@@ -1,7 +1,5 @@
 
-## Heading
-
-Vector Calculator
+## Vector Calculator
 
 This program is called the Vector Calculator. It has a MATLAB-like user interface where the user may create vector to their desire and perform numerous operations on them. It also has vector-specific operations like cross product and dot product. The ability to save and load lists of vectors is available. The program has many input limitations, but is efficient nonetheless. 
 
