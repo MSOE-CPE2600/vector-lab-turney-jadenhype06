@@ -320,13 +320,6 @@ int main()
             curr_mem = INITIAL_MEM_SIZE;
             elements = 0;
 
-            //Check mem full, then realloc
-            if (elements >= curr_mem)
-            {
-                curr_mem *= 2;
-                memory = (vector *) realloc(memory, curr_mem * sizeof(vector));
-            }
-
             //Store data in temp by reading .csv
             char directory[100];
             strcpy(directory, textstr_array[1]);
@@ -374,8 +367,9 @@ int main()
                     memory[elements] = create(new_x, new_y, new_z, new_name);
                     elements++;
                 }
+                fclose(file_ptr);
             }
-
+            
 
         }
         
@@ -411,9 +405,9 @@ int main()
             printf("- Scalar Multiplication: Vector * Num (communitive with assignment functionality)\n");
             printf("- Dot Product: Vector . Vector\n");
             printf("- Cross Product: Vector X Vector (with assignment functionality)\n");
-            printf("- Save Vector Array: save [directory]");
-            printf("- Load Vector Array: load [directory]");
-            printf("Note: When using load, put .csv at the end of the directory. Only .csv files are supported.");
+            printf("- Save Vector Array: save [directory].csv");
+            printf("- Load Vector Array: load [directory].csv");
+            printf("Note: When using load/save, put .csv at the end of the directory. Only .csv files are supported.");
         }
         //Case: list
         else if (strcmp(userinputcpy, "list\n") == 0)     //list case
