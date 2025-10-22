@@ -23,6 +23,6 @@ Misc. Commands:
 - help: Provides a brief overview of the Vector Calculator.
 
 Warnings: 
-Make sure to include spaces in between **each** argument, even after the last one.
-Any assignment operation stores the vector in memory.
-When using load/save, put .csv at the end of the directory. **Only .csv files are supported.**
+1. Make sure to include spaces in between **each** argument, even after the last one.
+2. Any assignment operation stores the vector in memory.
+3. When using load/save, put .csv at the end of the directory. **Only .csv files are supported.**
